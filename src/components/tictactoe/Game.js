@@ -1,29 +1,56 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import Board from './Board';
 import './GameStyles.css';
-import { caculateWWinner } from './../../helpers';
+import { caculateWinner } from './../../helpers';
+
+const initialState = {
+    board: Array(9).fill(null),
+    xIsNext: true,
+};
+
+const gameReducer = (state, action) => {
+    switch (action.type) {
+        case 'handleClick':
+            const newBoard = [...state.board];
+            if (action.payload.winner || newBoard[action.payload.index]) return state;
+            newBoard[action.payload.index] = state.xIsNext ? 'X' : 'O';
+            return {
+                ...state,
+                board: newBoard,
+                xIsNext: !state.xIsNext,
+            };
+
+        case 'handleResetGame':
+            return {
+                ...state,
+                board: Array(9).fill(null),
+                xIsNext: true,
+            };
+        default:
+            return state;
+    }
+};
 
 export default function Game() {
-    const [board, setBoard] = useState(Array(9).fill(null));
-    const [xIsNext, setXIsNext] = useState(true);
-    const winner = caculateWWinner(board);
-    const handleClick = (index) => {
-        const newBoard = [...board];
-        if(winner || newBoard[index]) return;
-        newBoard[index] = xIsNext ? 'X' : 'O';
+    const [state, dispatch] = useReducer(gameReducer, initialState);
 
-        setBoard(newBoard);
-        setXIsNext(!xIsNext);
+    const winner = caculateWinner(state.board);
+
+    const handleClick = (index) => {
+        dispatch({ type: 'handleClick', payload: { index, winner } });
     };
+
     const handleResetGame = () => {
-        setBoard(Array(9).fill(null));
-        setXIsNext(true);
-    }
+        dispatch({ type: 'handleResetGame' });
+    };
+
     return (
         <div>
-            <Board cells={board} onClick={handleClick} />
+            <Board cells={state.board} onClick={handleClick} />
             {winner && <div className="game-winner">Winner: {winner}</div>}
-            <button className='game-reset' onClick={handleResetGame}>Reset Game</button>
+            <button className="game-reset" onClick={handleResetGame}>
+                Reset Game
+            </button>
         </div>
     );
 }

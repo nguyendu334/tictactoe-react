@@ -1,4 +1,4 @@
-export function caculateWWinner(cells) {
+export function caculateWinner(cells) {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
