@@ -10,7 +10,7 @@ const CardTailwind = (props) => {
             <div className="w-full rounded-lg h-[400px]">
                 <img
                     className="block w-full h-full rounded-lg object-cover"
-                    src="https://cdn.dribbble.com/users/2400293/screenshots/17040958/media/4962f801be5fbfd65d807df3f7eff4ae.png?compress=1&resize=1000x750&vertical=top"
+                    src={props.src || "https://cdn.dribbble.com/users/2400293/screenshots/16527147/media/f079dc5596a5fb770016c4ea506cd77b.png?compress=1&resize=1000x750&vertical=top"}
                     alt=""
                 />
             </div>
